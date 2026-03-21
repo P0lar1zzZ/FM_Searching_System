@@ -41,10 +41,25 @@ python generate_icon.py
 
 | 步骤 | 功能 | 说明 |
 |------|------|------|
-| 1️⃣ | 检查 Python | 如果没装 Python，会打开官方下载页面 |
+| 1️⃣ | 检查并自动下载 Python | 智能测试国内镜像源，优先使用最快的源 |
 | 2️⃣ | 安装依赖 | 使用清华 TUNA 镜像，一键安装 3 个包 |
 | 3️⃣ | 下载脚本 | 从 GitHub 下载最新版本（使用 fastgit 加速） |
 | 4️⃣ | 创建快捷方式 | 自动在桌面创建精美快捷方式 |
+
+### 第一步详解：智能 Python 下载
+
+脚本会自动测试并使用最快的下载源：
+
+| 优先级 | 镜像源 | 特点 |
+|------|------|------|
+| 1️⃣ | **npmmirror** | 国内 CDN，通常最快 |
+| 2️⃣ | **阿里云** | 阿里巴巴维护，备用源 |
+| 3️⃣ | **清华大学** | TSINGHUA 官方镜像 |
+| 4️⃣ | **Python 官网** | 最后备选（国外） |
+
+脚本会依次测试各镜像的连接速度，选择第一个可用的源，然后自动打开下载页面。
+
+**关键提示**：安装时务必 ✅ **勾选 "Add Python to PATH"**
 
 ### 第三步详解：自动更新脚本
 
@@ -67,6 +82,13 @@ python generate_icon.py
 如果超时，脚本会建议你用：
 - 阿里云: https://mirrors.aliyun.com/pypi/simple/
 - 腾讯云: http://mirrors.cloud.tencent.com/pypi/simple
+- 豆瓣: https://pypi.douban.com/simple
+
+**Python 下载镜像**（如需手动下载）：
+- npmmirror: https://npmmirror.com/mirrors/python
+- 阿里云: https://mirrors.aliyun.com/python
+- 清华大学: https://mirrors.tsinghua.edu.cn/python-releases
+- 官方: https://www.python.org/downloads/windows/
 
 ---
 
@@ -86,7 +108,22 @@ python generate_icon.py
 ## ⚠️ 常见问题
 
 ### Q1: 提示"Python 未安装"怎么办？
-**A:** 脚本会自动打开 Python 官网，请下载 Python 3.8+ 版本，**务必勾选"Add Python to PATH"**
+**A:** 脚本会自动测试多个国内镜像源，优先打开最快的下载页面：
+
+1. **npmmirror (通常最快)** - 国内 CDN 加速
+2. **阿里云镜像** - 备用源
+3. **清华大学镜像** - 备用源  
+4. **Python 官网** - 最后备选
+
+如果都无法连接，会打开官网。
+
+**关键**：安装时必须 ✅ **勾选 "Add Python to PATH"**（添加到系统路径），否则脚本无法找到 Python！
+
+如果已安装但脚本仍提示未找到：
+- 重启电脑（让系统重新读取环境变量）
+- 或手动添加 Python 到环境变量：
+  - 右键"此电脑" → 属性 → 高级系统设置 → 环境变量
+  - 在 Path 中添加：`C:\Users\你的用户名\AppData\Local\Programs\Python\Python310\` （根据实际安装路径调整）
 
 ### Q2: pip 安装超时？
 **A:** 脚本已使用清华镜像加速。如仍超时，手动运行：

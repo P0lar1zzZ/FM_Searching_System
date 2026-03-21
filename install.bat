@@ -14,12 +14,79 @@ python --version >nul 2>&1
 if errorlevel 1 (
     echo.
     echo ⚠️  未检测到 Python！
-    echo 即将打开 Python 官方下载页面...
-    timeout /t 2 >nul
-    start https://www.python.org/downloads/
+    echo 正在为你寻找最快的 Python 下载源...
     echo.
-    echo 请先安装 Python 3.8 或更新版本，记得勾选 "Add Python to PATH"
+    
+    REM 定义国内镜像源
+    set "MIRROR1=https://npmmirror.com/mirrors/python"
+    set "MIRROR2=https://mirrors.aliyun.com/python"
+    set "MIRROR3=https://mirrors.tsinghua.edu.cn/python-releases"
+    set "MIRROR_OFFICIAL=https://www.python.org/downloads/windows/"
+    
+    set "PYTHON_FOUND=0"
+    set "FASTEST_MIRROR="
+    
+    REM 测试镜像可用性
+    echo 正在测试镜像源...
+    
+    REM 测试 npmmirror（通常最快）
+    echo   • 测试 npmmirror 源...
+    curl -I -s -m 3 "%MIRROR1%" >nul 2>&1
+    if errorlevel 0 (
+        set "FASTEST_MIRROR=%MIRROR1%"
+        set "PYTHON_FOUND=1"
+        echo     ✓ 可用！（npmmirror CDN）
+    ) else (
+        echo     ✗ 超时
+    )
+    
+    REM 如果 npmmirror 失败，测试阿里云
+    if !PYTHON_FOUND! equ 0 (
+        echo   • 测试阿里云镜像源...
+        curl -I -s -m 3 "%MIRROR2%" >nul 2>&1
+        if errorlevel 0 (
+            set "FASTEST_MIRROR=%MIRROR2%"
+            set "PYTHON_FOUND=1"
+            echo     ✓ 可用！（阿里云）
+        ) else (
+            echo     ✗ 超时
+        )
+    )
+    
+    REM 如果前两个都失败，测试清华源
+    if !PYTHON_FOUND! equ 0 (
+        echo   • 测试清华大学镜像源...
+        curl -I -s -m 3 "%MIRROR3%" >nul 2>&1
+        if errorlevel 0 (
+            set "FASTEST_MIRROR=%MIRROR3%"
+            set "PYTHON_FOUND=1"
+            echo     ✓ 可用！（清华大学）
+        ) else (
+            echo     ✗ 超时
+        )
+    )
+    
+    echo.
+    
+    if !PYTHON_FOUND! equ 1 (
+        echo ✓ 找到最快镜像源，正在打开下载页面...
+        echo 📍 推荐版本：Python 3.9 或 3.10
+        echo 💡 重要提示：安装时务必勾选 "Add Python to PATH"
+        echo.
+        timeout /t 3 >nul
+        start !FASTEST_MIRROR!
+    ) else (
+        echo ⚠️  所有镜像源均无法连接，打开官方下载页面...
+        echo 📍 访问 Python 官网获取最新版本
+        echo.
+        timeout /t 2 >nul
+        start %MIRROR_OFFICIAL%
+    )
+    
+    echo.
+    echo 请先完成 Python 安装，记得勾选 "Add Python to PATH" ✓
     echo 安装完成后，请重新运行此脚本。
+    echo.
     pause
     exit /b 1
 ) else (
