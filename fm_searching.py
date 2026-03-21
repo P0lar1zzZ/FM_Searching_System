@@ -9,7 +9,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox
 
-# 专门给妈准备的提示弹窗
+# 提示弹窗
 def show_popup(title, message, is_error=False):
     """显示友好的提示弹窗"""
     root = tk.Tk()
