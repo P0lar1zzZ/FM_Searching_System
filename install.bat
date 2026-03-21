@@ -147,20 +147,20 @@ REM 尝试下载 fm_searching 脚本
 echo   • 正在从 GitHub 下载最新脚本...
 
 REM 优先使用加速镜像 (fastgit)
-curl -s -o "%cd%\fm_searching_new" "%MIRROR_RAW%/fm_searching" >nul 2>&1
+curl -s -o "%cd%\fm_searching_new.py" "%MIRROR_RAW%/fm_searching.py" >nul 2>&1
 if errorlevel 1 (
     REM 加速镜像失败，尝试官方 GitHub
     echo   • 加速镜像超时，尝试官方源...
-    curl -s -o "%cd%\fm_searching_new" "%GITHUB_RAW%/fm_searching" >nul 2>&1
+    curl -s -o "%cd%\fm_searching_new.py" "%GITHUB_RAW%/fm_searching.py" >nul 2>&1
 )
 
-if exist "%cd%\fm_searching_new" (
+if exist "%cd%\fm_searching_new.py" (
     REM 备份原文件
-    if exist "%cd%\fm_searching" (
-        move /y "%cd%\fm_searching" "%cd%\fm_searching.backup" >nul 2>&1
+    if exist "%cd%\fm_searching.py" (
+        move /y "%cd%\fm_searching.py" "%cd%\fm_searching.py.backup" >nul 2>&1
     )
     REM 使用新文件
-    move /y "%cd%\fm_searching_new" "%cd%\fm_searching" >nul 2>&1
+    move /y "%cd%\fm_searching_new.py" "%cd%\fm_searching.py" >nul 2>&1
     echo     ✓ 脚本下载成功！
 ) else (
     echo     ⚠️  下载失败，继续使用本地脚本
@@ -196,7 +196,7 @@ for /f "tokens=3" %%i in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\Windo
 )
 
 REM 获取脚本的完整路径
-set "SCRIPT_PATH=%cd%\fm_searching"
+set "SCRIPT_PATH=%cd%\fm_searching.py"
 
 REM 创建 VBScript 脚本来建立快捷方式
 set "VBS_FILE=%temp%\create_shortcut.vbs"
